@@ -1,0 +1,24 @@
+{
+  "name": "!cdpaynes",
+  "version": "1.0.0",
+  "description": "Blocks lewd content from the CdT timeline",
+  "main": "lewdContentRemover.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alastairparagas/notCdPaynes.git"
+  },
+  "keywords": [
+    "cdt",
+    "clarifai",
+    "lewd"
+  ],
+  "author": "Alastair Paragas <alastairparagas@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alastairparagas/notCdPaynes/issues"
+  },
+  "homepage": "https://github.com/alastairparagas/notCdPaynes#readme"
+}

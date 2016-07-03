@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' 
+          rel='stylesheet' 
+          type='text/css'>
+    <script type="text/javascript">
+      function bootstrap() {
+        function saveClarifaiId(newId) {
+          activateUiMessage();
+          chrome.storage.sync.set({
+            "client_id": newId
+          });
+        }
+        function saveClarifaiSecret(newSecret) {
+          activateUiMessage();
+          chrome.storage.sync.set({
+            "client_secret": newSecret
+          });
+        }
+        function saveExtensionEnabled(isEnabled) {
+          activateUiMessage();
+          chrome.storage.sync.set({
+            "extension_enabled": isEnabled
+          });
+        }
+        function activateUiMessage() {
+          const uiMessageDOM = window.document.getElementById("uiMessage");
+          let oldStyle = uiMessageDOM.style.cssText;
+          uiMessageDOM.style.cssText = null;
+
+          setTimeout(() => {
+            uiMessageDOM.style.cssText = oldStyle;
+          }, 3000);
+        }
+
+        const clarifaiIdDOM = window.document.getElementById("clarifai_id");
+        clarifaiIdDOM.addEventListener("keydown", () => {
+          saveClarifaiId(clarifaiIdDOM.value);
+          console.log("HIT");
+        });
+        const clarifaiSecretDOM = window.document.getElementById("clarifai_secret");
+        clarifaiSecretDOM.addEventListener("keydown", () => {
+          saveClarifaiSecret(clarifaiSecretDOM.value);
+        });
+        const isEnabledDOM = window.document.getElementById("enabledButton");
+        isEnabledDOM.addEventListener("keydown", () => {
+          if (isEnabledDOM.value === "isEnabled") {
+            saveExtensionEnabled(true);
+            return;
+          }
+
+          saveExtensionEnabled(false);
+        });
+      }
+      
+      window.addEventListener("load", bootstrap);
+    </script>
+  </head>
+  <body style="font-family: 'Open Sans', sans-serif; font-size:12px; background:#75b9e7; color: white;">
+    <div style="display:flex; flex-direction:column;">
+      <div style="flex-basis:50%;">
+        Clarifai Client ID: <input style="margin-left:10px; margin-bottom: 10px;" type="text" id="clarifai_id"><br>
+        Clarifai Client Secret: <input style="margin-left:10px; margin-bottom: 10px;" type="text" id="clarifai_secret"><br>
+        Enable !CdPaynes? <input style="margin-left:10px; margin-bottom:15px;" type="radio" id="enabledButton" value="isEnabled"> If chosen, ENABLED<br>
+        <span id="uiMessage" style="display:none;">Saving Settings...</span>
+      </div>
+    </div>
+  </body>
+</html>
