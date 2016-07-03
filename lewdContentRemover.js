@@ -1,4 +1,4 @@
-(function (global, DOM, chrome) {
+((global, DOM, chrome) => {
   "use strict";
   
   /**
@@ -112,8 +112,10 @@
   *   @returns {Promise}
   */
   function chromeStoreData(storeObject) {
-    return new Promise((res) => 
-                       chrome.storage.sync.set(storeObject, res));
+    return new Promise((res) => chrome.runtime.sendMessage({
+      type: "saveObject",
+      payload: storeObject
+    }, res));
   }
   
   /**
@@ -123,8 +125,10 @@
   *   @returns {Promise}
   */
   function chromeGetData(defaultObject) {
-    return new Promise((res) => 
-                       chrome.storage.sync.get(defaultObject, res));
+    return new Promise((res) => chrome.runtime.sendMessage({
+      type: "getObject",
+      payload: defaultObject
+    }, res));
   }
   
   /**
