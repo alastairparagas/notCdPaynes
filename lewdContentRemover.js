@@ -39,14 +39,14 @@
         }
         
         var timeReached = false,
-            setTimeOutReference = setTimeout(() => {
+            setTimeoutReference = setTimeout(() => {
               timeReached = true;
               callableOnTimeOut();
             }, timeOutDuration);
         
         return {
           cancel: function () { 
-            clearTimeout(setTimeOutReference);
+            clearTimeout(setTimeoutReference);
           },
           isTimeOut: function () {
             return timeReached;
@@ -134,16 +134,16 @@
   * @returns {Function} Debounced Function
   */
   function debounce(callable, milliseconds=500) {
-    let setTimeOutRef = null;
+    let setTimeoutRef = null;
     return () => {
       const context = this,
             args = arguments;
       
-      if (setTimeOutRef !== null) {
-        clearTimeout(setTimeOutRef);
+      if (setTimeoutRef !== null) {
+        clearTimeout(setTimeoutRef);
       }
-      setTimeOutRef = setTimeout(() => {
-        setTimeOutRef = null;
+      setTimeoutRef = setTimeout(() => {
+        setTimeoutRef = null;
         callable.apply(context, args);
       }, milliseconds);
     };
@@ -165,7 +165,9 @@
       rating_basis: 0.7
     }).then(({client_id, client_secret, access_token, 
               access_token_exp, rating_basis}) => {
-      if (access_token !== null && typeof access_token === "string") {
+      if (access_token !== null && 
+          typeof access_token === "string" && 
+          Number(access_token_exp) > (new Date()).getTime()) {
         return {
           access_token,
           ratingBasis: rating_basis
@@ -173,14 +175,18 @@
       }
       
       return request("POST", 
-                     "https://api.clarifai.com/v1/token", 
-                     {
+                     "https://api.clarifai.com/v1/token", {
         requestBody: "client_id=" + client_id + "&client_secret=" + 
           client_secret + "&grant_type=client_credentials"
       }).then(({content}) => {
-        const accessToken = content.access_token;
+        const accessToken = content.access_token,
+              expirationTime = new Date().setSeconds(
+                Number(content.expires_in) - 7200
+              );
+        
         chromeStoreData({
-          access_token: accessToken
+          access_token: accessToken,
+          access_token_exp: expirationTime.getTime()
         });
         
         return {
@@ -193,7 +199,8 @@
   
   /**
   * Obtains DOM images in the CdT timeline as a list
-  * @returns {Array}
+  *   Only returns images that are content-based
+  * @returns {Array} List of DOM image nodes
   */
   function obtainImagesAsList() {
     const regex = new RegExp(/CirqueDuTwerque|cdt/i);
@@ -248,12 +255,15 @@
         .then(({accessToken, ratingBasis}) => {
           obtainImagesAsList()
             .filter((domImg) => {
+              // Use cached NSFW rating
               if (domImg.src in pastImages) {
                 return pastImages[domImg.src];
               }
+              
               const isNsfw = nsfwUrlTest(domImg.src, 
                                          accessToken, 
                                          ratingBasis);
+              // Cache NSFW rating
               pastImages[domImg.src] = isNsfw;
               return isNsfw;
             })
@@ -263,8 +273,11 @@
   }
   
   // Bootstrap contained main application state
-  const runMain = _main_();
-  runMain();
-  global.addEventListener('scroll', debounce(runMain));
+  chromeStoreData({"extension_enabled": true}).then(() => {
+    const runMain = _main_();
+    
+    runMain();
+    global.addEventListener('scroll', debounce(runMain));
+  });
   
 }(window, window.document, window.chrome));
