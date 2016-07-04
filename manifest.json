@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "!CdPaynes",
+  "description": "Blocks lewd images from the CdT news feed",
+  "version": "1.0.0",
+  "default_locale": "en",
+  "icons": "logo.png",
+  "browser_action": {
+    "default_title": "!CdPaynes",
+    "default_icon": "logo.png",
+    "default_popup": "popupMenu.html"
+  },
+  "background": {
+    "scripts": ["extensionMain.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://facebook.com/*"],
+      "js": ["lewdContentRemover.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
