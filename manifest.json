@@ -3,8 +3,9 @@
   "name": "!CdPaynes",
   "description": "Blocks lewd images from the CdT news feed",
   "version": "1.0.0",
-  "default_locale": "en",
-  "icons": "logo.png",
+  "icons": {
+    "500": "logo.png"
+  },
   "browser_action": {
     "default_title": "!CdPaynes",
     "default_icon": "logo.png",
@@ -20,5 +21,8 @@
       "js": ["lewdContentRemover.js"],
       "run_at": "document_idle"
     }
+  ],
+  "permissions": [
+    "storage"
   ]
 }
