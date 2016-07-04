@@ -1,64 +1,12 @@
-<html>
+<html style="width:300px;">
   <head>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' 
           rel='stylesheet' 
           type='text/css'>
-    <script type="text/javascript">
-      function bootstrap() {
-        
-        function saveClarifaiId(newId) {
-          activateUiMessage();
-          chrome.storage.sync.set({
-            "client_id": newId
-          });
-        }
-        function saveClarifaiSecret(newSecret) {
-          activateUiMessage();
-          chrome.storage.sync.set({
-            "client_secret": newSecret
-          });
-        }
-        function saveExtensionEnabled(isEnabled) {
-          activateUiMessage();
-          chrome.storage.sync.set({
-            "extension_enabled": isEnabled
-          });
-        }
-        function activateUiMessage() {
-          const uiMessageDOM = window.document.getElementById("uiMessage");
-          
-          uiMessageDOM.style.cssText = null;
-
-          setTimeout(() => {
-            uiMessageDOM.style.cssText = "display:none;";
-          }, 1000);
-          console.log("HIT");
-        }
-
-        // Attach event listeners
-        const clarifaiIdDOM = window.document.getElementById("clarifai_id");
-        clarifaiIdDOM.addEventListener("keyup", () => 
-                                       saveClarifaiId(clarifaiIdDOM.value));
-        
-        const clarifaiSecretDOM = window.document.getElementById("clarifai_secret");
-        clarifaiSecretDOM.addEventListener("keyup", () => 
-                                           saveClarifaiSecret(clarifaiSecretDOM.value));
-        
-        const isEnabledDOM = window.document.getElementById("enabledButton");
-        isEnabledDOM.addEventListener("change", () => {
-          if (isEnabledDOM.value === "isEnabled") {
-            saveExtensionEnabled(true);
-            return;
-          }
-
-          saveExtensionEnabled(false);
-        });
-      }
-      
-      window.addEventListener("load", bootstrap);
-    </script>
+    <script type="text/javascript" 
+            src="popupMenu.js"></script>
   </head>
-  <body style="font-family: 'Open Sans', sans-serif; font-size:12px; background:#75b9e7; color: white;">
+  <body style="style:300px; font-family: 'Open Sans', sans-serif; font-size:12px; background:#75b9e7; color: white;">
     <div style="display:flex; flex-direction:column;">
       <div style="flex-basis:50%;">
         Clarifai Client ID: <input style="margin-left:10px; margin-bottom:10px;" type="text" id="clarifai_id"><br>
